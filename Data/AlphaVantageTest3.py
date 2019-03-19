@@ -1,4 +1,5 @@
 from alpha_vantage.techindicators import TechIndicators
+from alpha_vantage.timeseries import TimeSeries
 import time
 import pandas
 
@@ -12,14 +13,11 @@ Start_Date = '2010-01-04'
 End_Date = '2017-12-29'
 
 
-
 def Master_Symbol_Loop(dict_kwargs, symbol_list, series_list, time_period_list, price_type_list, start_date, end_date):
     dict_kwargs['interval'] = interval
     for symbol in symbol_list:
         dict_kwargs['symbol'] = symbol
         Series_Loop(dict_kwargs, series_list, time_period_list, price_type_list, start_date, end_date)
-
-
 
 
 def Series_Loop(dict_kwargs, series_list, time_period_list, price_type_list, start_date, end_date):
@@ -64,23 +62,28 @@ def Standard_TechIndicator(dict_kwargs, series, price_type_list, start_date, end
         appended_data_slice.to_csv(file_name)
         time.sleep(15.0 - ((time.time() - starttime) % 15.0))
 
+def Daily_Adjusted_Loop(dict_kwargs, symbol_list, start_date, end_date):
+    for symbol in symbol_list:
+        dict_kwargs['symbol'] = symbol
+        Time_Series_Loop(dict_kwargs, start_date, end_date)
+
+def Time_Series_Loop(dict_kwargs, start_date, end_date):
+    starttime = time.time()
+    ts = TimeSeries(key='6RX0I0CC3SZBVUCI', output_format='pandas')
+    function = 'get_daily_adjusted'
+    data, meta_data = getattr(ts, function)(**dict_kwargs)
+    file_name = 'C:\\Users\\BabyHulk\\PycharmProjects\\IntelligentTrader\\AlphaVantageCSV\\DailyAdjusted' \
+                + '\\' + dict_kwargs['symbol'] + '_' + 'DailyAdjusted' + '.csv'
+    data_slice = data.loc[start_date:end_date]
+    data_slice.to_csv(file_name)
+    time.sleep(3.0 - ((time.time() - starttime) % 3.0))
 
 
-#Master_Symbol_Loop({}, symbol_list, series_no_price_list, time_period_list, price_type_list, interval, Start_Date, End_Date)
-
-"This is the no_price_list series of functions. The [] for the price list is a backend."
-Master_Symbol_Loop({}, symbol_list, series_no_price_list, time_period_list, [], Start_Date, End_Date)
 
 
-"BollingBands"
-#Master_Symbol_Loop({'matype':'EMA'}, ['BBANDS'], time_period_list, [], interval, Start_Date, End_Date)
+# Master_Symbol_Loop({}, symbol_list, series_no_price_list, time_period_list, price_type_list, interval, Start_Date, End_Date)
 
+"This is the no_price_list series of functions. The [] for the price list is a end around."
+#Master_Symbol_Loop({}, symbol_list, series_no_price_list, time_period_list, [], Start_Date, End_Date)
 
-#Standard_TechIndicator('WFC', 'AROON', 10, [], interval, Start_Date, End_Date)
-#Time_Period_Loop('C', 'WILLR', time_period_list, [], interval, Start_Date, End_Date)
-
-#Standard_TechIndicator('WFC', 'SMA', 5, price_type_list, interval, Start_Date, End_Date)
-#Standard_TechIndicator('BRK.b', 'EMA', 20, price_type_list, interval, Start_Date, End_Date)
-#Standard_TechIndicator('BRK.b', 'EMA', 40, price_type_list, interval, Start_Date, End_Date)
-#Standard_TechIndicator('BRK.b', 'EMA', 60, price_type_list, interval, Start_Date, End_Date)
-#Standard_TechIndicator('BRK.b', 'EMA', 121, price_type_list, interval, Start_Date, End_Date)
+Daily_Adjusted_Loop({'outputsize' : 'full'}, symbol_list, Start_Date, End_Date)
