@@ -12,7 +12,7 @@ import csv
 import pandas
 
 
-def preprocess(desiredStock):
+def preprocess(desiredStock, type):
     headerString = ''
     data_string = ''
     stockData = []
@@ -23,19 +23,19 @@ def preprocess(desiredStock):
     timeIntervals = ['5', '10', '20', '40', '60', '121']
 
     # eight columns with headers
-    dailyAdjusted = glob.glob('/Users/levimeyer/Desktop/NEAT-Stocks-master/Data/AlphaVantageCSV/DailyAdjusted/*.csv')
+    dailyAdjusted = glob.glob('C:/Users/BabyHulk/Documents/GitHub/NEAT-Stocks/' + str(type) + '/DailyAdjusted/*.csv')
 
     # five columns with headers
     # ten stocks with 8 metrics
     # each metric has 6 time intervals
-    openClose = glob.glob('/Users/levimeyer/Desktop/NEAT-Stocks-master/Data/AlphaVantageCSV/Open_Low_High_Close/*.csv')
+    openClose = glob.glob('C:/Users/BabyHulk/Documents/GitHub/NEAT-Stocks/' + str(type) + '/Open_Low_High_Close/*.csv')
     openClose.sort()
 
     # 4 metrics for each stock
     # each metric has 6 time intervals
     # each file has 2 columns (date, metric) except AROON
     # AROON has 3 columns (date, AROON up, AROON down)
-    singleColumn = glob.glob('/Users/levimeyer/Desktop/NEAT-Stocks-master/Data/AlphaVantageCSV/SingleColumn/*.csv')
+    singleColumn = glob.glob('C:/Users/BabyHulk/Documents/GitHub/NEAT-Stocks/' + str(type) + '/SingleColumn/*.csv')
     singleColumn.sort()
 
 
