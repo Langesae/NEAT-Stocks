@@ -9,9 +9,10 @@ Download the respository and give the glob functions the path to your files
 import glob
 import re
 import csv
+import pandas
 
-def preprocess():
 
+def preprocess(desiredStock):
     headerString = ''
     data_string = ''
     stockData = []
@@ -61,10 +62,48 @@ def preprocess():
         allData.append(stockData)
         stockData = []
 
-    return allData
+    index = stocks.index(desiredStock)
 
-    ##for i in range(0,10):
-    ##    print(len(allData[i]))
+    dataFrame = makeDataFrame(allData, index)
+
+    dataFrame = dataFrame.drop([0] , axis = 1)
+
+    dataFrame = dataFrame.values
+
+    return dataFrame
+
+
+
+'''
+Turning allData into a data frame
+Outputs data for one stock in data frame
+'''
+
+
+
+
+def makeDataFrame(data, index):
+
+    count = 0
+    
+    stock = data[index]
+    for day in range(0,len(stock)):
+        if count == 0:
+            dataFrame = pandas.DataFrame(stock[day].split(','))
+        else:
+            df2 = pandas.DataFrame(stock[day].split(','))
+            dataFrame = pandas.concat([dataFrame,df2], axis = 1)
+        count += 1
+
+
+    return dataFrame.transpose()
+
+
+
+
+
+
+
 
 
 
@@ -84,4 +123,6 @@ csv saving
 ##csvfile.close()
 ##    
     
+
+
 
