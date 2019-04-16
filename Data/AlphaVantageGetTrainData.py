@@ -80,7 +80,7 @@ def Time_Series_Loop(dict_kwargs, start_date, end_date):
 
 
 
-Master_Symbol_Loop({}, symbol_list, series_no_price_list, time_period_list, price_type_list, Start_Date, End_Date)
+Master_Symbol_Loop({}, symbol_list, series_list, time_period_list, price_type_list, Start_Date, End_Date)
 
 "This is the no_price_list series of functions. The [] for the price list is a end around."
 Master_Symbol_Loop({}, symbol_list, series_no_price_list, time_period_list, [], Start_Date, End_Date)
