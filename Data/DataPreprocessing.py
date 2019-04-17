@@ -10,6 +10,8 @@ import glob
 import re
 import csv
 import pandas
+import os
+import numpy
 
 
 def preprocess(desiredStock, type):
@@ -99,6 +101,16 @@ def makeDataFrame(data, index):
     return dataFrame.transpose()
 
 
+def preprocessAndSave(preprocessDataFrame, name):
+    cwd = os.getcwd()
+    path = cwd + '/' + name + '.csv'
+    numpy.savetxt(path, preprocessDataFrame, delimiter=",")
+    return
+
+if __name__ == '__main__':
+    APXData = preprocess('AXP', 'TrainData')
+    preprocessAndSave(APXData, 'APXTest')
+
 
 
 
@@ -113,16 +125,8 @@ csv saving
     currently unavailable
 '''
 
-##fileName = 'test.csv'
-##
-##with open(fileName, 'a') as csvfile:
-##    csvwriter = csv.writer(csvfile)
-##    for g in allData:
-##        csvwriter.writerow(g)
-##
-##csvfile.close()
-##    
+
     
-print(preprocess('AXP', 'TrainData'))
+
 
 
