@@ -1,10 +1,13 @@
 # Import
 import tensorflow as tf
 import numpy as np
-import pandas as pd
 from sklearn.preprocessing import MinMaxScaler
 import matplotlib.pyplot as plt
 from DataPreprocessing import preprocess
+from SaveMseCsv import Main_Save, Create_File_Name
+from PredictionDataProcessing import Full_Processing
+
+stock = 'USB'
 
 # Import data
 #data = pd.read_csv('C:\\Users\\BabyHulk\\PycharmProjects\\stockprediction-master\\02_code\\data_stocks.csv')
@@ -21,8 +24,8 @@ from DataPreprocessing import preprocess
 
 # Training and test data
 
-data_train = preprocess('CME', 'TrainData')
-data_test = preprocess('CME', 'TestData')
+data_train = preprocess(stock, 'TrainData')
+data_test = preprocess(stock, 'TestData')
 
 # Scale data
 scaler = MinMaxScaler(feature_range=(-1, 1))
@@ -83,6 +86,7 @@ out = tf.transpose(tf.add(tf.matmul(hidden_4, W_out), bias_out))
 # Cost function
 mse = tf.reduce_mean(tf.squared_difference(out, Y))
 
+
 # Optimizer
 opt = tf.train.AdamOptimizer().minimize(mse)
 
@@ -98,9 +102,12 @@ line2, = ax1.plot(y_test * 0.5)
 plt.show()
 
 # Fit neural net
-batch_size = 40
+batch_size = 50
 mse_train = []
 mse_test = []
+
+#addition of pred_list
+pred_list = []
 
 # Run
 epochs = 10
@@ -119,15 +126,21 @@ for e in range(epochs):
         # Run optimizer with batch
         net.run(opt, feed_dict={X: batch_x, Y: batch_y})
 
-        # Show progress
-        if np.mod(i, 10) == 0:
-            # MSE train and test
-            mse_train.append(net.run(mse, feed_dict={X: X_train, Y: y_train}))
-            mse_test.append(net.run(mse, feed_dict={X: X_test, Y: y_test}))
-            print('MSE Train: ', mse_train[-1])
-            print('MSE Test: ', mse_test[-1])
-            # Prediction
-            pred = net.run(out, feed_dict={X: X_test})
-            line2.set_ydata(pred)
-            plt.title('Epoch ' + str(e) + ', Batch ' + str(i))
-            plt.pause(1.01)
+        # MSE train and test
+        mse_train.append(net.run(mse, feed_dict={X: X_train, Y: y_train}))
+        mse_test.append(net.run(mse, feed_dict={X: X_test, Y: y_test}))
+
+        # Prediction
+        pred = net.run(out, feed_dict={X: X_test})
+        line2.set_ydata(pred)
+        pred_list.append(pred)
+
+        # Graph
+        plt.title('Epoch ' + str(e) + ', Batch ' + str(i))
+        plt.pause(.01)
+
+
+
+FileName = Create_File_Name(stock, 'Optimizer', 'Initializer', 'CostFunction')
+Main_Save(mse_train, mse_test, pred_list, FileName)
+Full_Processing(FileName, stock)

@@ -11,7 +11,8 @@ price_type_list = ['open', 'low', 'high', 'close']
 interval = 'daily'
 Start_Date = '2018-01-02'
 End_Date = '2019-03-31'
-
+Start_Date_Adj = '2018-01-03'
+End_Date_Adj = '2019-04-01'
 
 def Master_Symbol_Loop(dict_kwargs, symbol_list, series_list, time_period_list, price_type_list, start_date, end_date):
     dict_kwargs['interval'] = interval
@@ -74,15 +75,16 @@ def Time_Series_Loop(dict_kwargs, start_date, end_date):
     file_name = 'C:\\Users\\BabyHulk\\PycharmProjects\\IntelligentTrader\\AlphaVantageCSV\\TestData\\DailyAdjusted' \
                 + '\\' + dict_kwargs['symbol'] + '_' + 'DailyAdjusted' + '.csv'
     data_slice = data.loc[start_date:end_date]
-    data_slice.to_csv(file_name)
+    next_data_slice = data_slice['4. close']
+    next_data_slice.to_csv(file_name, header=  'Close')
     time.sleep(3.0 - ((time.time() - starttime) % 3.0))
 
 
 
 
-Master_Symbol_Loop({}, symbol_list, series_list, time_period_list, price_type_list, Start_Date, End_Date)
+#Master_Symbol_Loop({}, symbol_list, series_list, time_period_list, price_type_list, Start_Date, End_Date)
 
 "This is the no_price_list series of functions. The [] for the price list is a end around."
-Master_Symbol_Loop({}, symbol_list, series_no_price_list, time_period_list, [], Start_Date, End_Date)
+#Master_Symbol_Loop({}, symbol_list, series_no_price_list, time_period_list, [], Start_Date, End_Date)
 
-Daily_Adjusted_Loop({'outputsize' : 'full'}, symbol_list, Start_Date, End_Date)
+Daily_Adjusted_Loop({'outputsize' : 'full'}, symbol_list, Start_Date_Adj, End_Date_Adj)

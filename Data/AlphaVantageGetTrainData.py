@@ -11,6 +11,8 @@ price_type_list = ['open', 'low', 'high', 'close']
 interval = 'daily'
 Start_Date = '2010-01-04'
 End_Date = '2017-12-29'
+Start_Date_Adj = '2010-01-05'
+End_Date_Adj = '2018-01-02'
 
 
 def Master_Symbol_Loop(dict_kwargs, symbol_list, series_list, time_period_list, price_type_list, start_date, end_date):
@@ -38,7 +40,7 @@ def Standard_TechIndicator(dict_kwargs, series, price_type_list, start_date, end
     function = ('get_' + series.casefold())
     if price_type_list == []:
         data, meta_data = getattr(ti, function)(**dict_kwargs)
-        file_name = 'C:\\Users\\BabyHulk\\PycharmProjects\\IntelligentTrader\\AlphaVantageCSV\\TestData\\SingleColumn' \
+        file_name = 'C:\\Users\\BabyHulk\\PycharmProjects\\IntelligentTrader\\AlphaVantageCSV\\TrainData\\SingleColumn' \
                     + '\\' + dict_kwargs['symbol'] + '_' + series + '_' + str(dict_kwargs['time_period']) \
                     + '.csv'
         appended_data_slice = data.loc[start_date:end_date]
@@ -53,7 +55,7 @@ def Standard_TechIndicator(dict_kwargs, series, price_type_list, start_date, end
             data.rename(columns=columns_name, inplace=True)
             appended_data.append(data)
 
-        file_name = 'C:\\Users\\BabyHulk\\PycharmProjects\\IntelligentTrader\\AlphaVantageCSV\\TestData\\Open_Low_High_Close\\' \
+        file_name = 'C:\\Users\\BabyHulk\\PycharmProjects\\IntelligentTrader\\AlphaVantageCSV\\TrainData\\Open_Low_High_Close\\' \
                     + dict_kwargs['symbol'] + '_' + series + '_' + str(dict_kwargs['time_period']) + '.csv'
 
         appended_data = pandas.concat(appended_data, axis=1)
@@ -71,18 +73,19 @@ def Time_Series_Loop(dict_kwargs, start_date, end_date):
     ts = TimeSeries(key='6RX0I0CC3SZBVUCI', output_format='pandas')
     function = 'get_daily_adjusted'
     data, meta_data = getattr(ts, function)(**dict_kwargs)
-    file_name = 'C:\\Users\\BabyHulk\\PycharmProjects\\IntelligentTrader\\AlphaVantageCSV\\TestData\\DailyAdjusted' \
+    file_name = 'C:\\Users\\BabyHulk\\PycharmProjects\\IntelligentTrader\\AlphaVantageCSV\\TrainData\\DailyAdjusted' \
                 + '\\' + dict_kwargs['symbol'] + '_' + 'DailyAdjusted' + '.csv'
     data_slice = data.loc[start_date:end_date]
-    data_slice.to_csv(file_name)
+    next_data_slice = data_slice['4. close']
+    next_data_slice.to_csv(file_name, header= 'Close')
     time.sleep(3.0 - ((time.time() - starttime) % 3.0))
 
 
 
 
-Master_Symbol_Loop({}, symbol_list, series_list, time_period_list, price_type_list, Start_Date, End_Date)
+#Master_Symbol_Loop({}, symbol_list, series_list, time_period_list, price_type_list, Start_Date, End_Date)
 
 "This is the no_price_list series of functions. The [] for the price list is a end around."
-Master_Symbol_Loop({}, symbol_list, series_no_price_list, time_period_list, [], Start_Date, End_Date)
+#Master_Symbol_Loop({}, symbol_list, series_no_price_list, time_period_list, [], Start_Date, End_Date)
 
-Daily_Adjusted_Loop({'outputsize' : 'full'}, symbol_list, Start_Date, End_Date)
+Daily_Adjusted_Loop({'outputsize' : 'full'}, symbol_list, Start_Date_Adj, End_Date_Adj)
