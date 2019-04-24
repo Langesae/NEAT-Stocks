@@ -3,13 +3,12 @@ import os
 import random
 
 
-def Main_Save(MSETrainList, MSETestList, Pred_list, Stock, Optimizer, Initializer, CostFuncion):
+def Main_Save(MSETrainList, MSETestList, Pred_list, FileName):
     MSEDict = Combine_Lists_To_Dict(MSETrainList, MSETestList, Pred_list)
-    Save_Mse_Csv(MSEDict, Stock, Optimizer, Initializer, CostFuncion)
+    Save_Mse_Csv(MSEDict, FileName)
 
-def Save_Mse_Csv(MSEDict, Stock, Optimizer, Initializer, CostFuncion):
+def Save_Mse_Csv(MSEDict, FileName):
     MSEDf = MSE_Dict_To_Df(MSEDict)
-    FileName = Create_File_Name(Stock, Optimizer, Initializer, CostFuncion)
     MSE_Df_To_CSV(MSEDf, FileName)
     return
 
