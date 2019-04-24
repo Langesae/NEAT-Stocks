@@ -52,6 +52,14 @@ def Unscale_Prediction_To_DF(PreddictionArray, Stock):
 
     return uscaledTestDFOutput
 
+def Read_Daily_Adj(stock):
+    filename = os.getcwd() + '/TestData/DailyAdjusted/' + stock + '_DailyAdjusted.csv'
+    unscaledDailyAdj = pandas.read_csv(filename)
+    return unscaledDailyAdj
+
+def Combine_DailyAdj_With_Prediction(DailyAdjDF, PredictionDf):
+    dailyadjAndPredictionDF = pandas.concat([DailyAdjDF, PredictionDf], axis=1, join_axes=[DailyAdjDF.index])
+    return dailyadjAndPredictionDF
 
 def Save_Predictions_DF(PredictionsDF, ModelOutputCSVPath):
     filenameIndexStart = ModelOutputCSVPath.rfind('/')
@@ -65,7 +73,9 @@ def Full_Processing(ModelOutputCSVPath, Stock):
     predictionProcessedOnce  = Begin_Processing_Prediction_CSV(ModelOutputCSVPath)
     predictionsArray = Processing_Prediction_To_Array(predictionProcessedOnce)
     unscaledPredictionsDF = Unscale_Prediction_To_DF(predictionsArray, Stock)
-    Save_Predictions_DF(unscaledPredictionsDF, ModelOutputCSVPath)
+    dailyadj = Read_Daily_Adj(stock)
+    combinedDF = Combine_DailyAdj_With_Prediction(dailyadj, unscaledPredictionsDF)
+    Save_Predictions_DF(combinedDF, ModelOutputCSVPath)
     return
 
 
@@ -85,9 +95,15 @@ if __name__ == '__main__':
 
 
     testpred2 = Processing_Prediction_To_Array(testpred)
+    dailyadj = Read_Daily_Adj(stock)
+
 
     testpred3 = Unscale_Prediction_To_DF(testpred2, stock)
     print(testpred3)
-    #Full_Processing(filename, stock)
+
+    dailyadjAndPred = Combine_DailyAdj_With_Prediction(dailyadj, testpred3)
+    print(dailyadjAndPred)
+
+    Full_Processing(filename, stock)
 
 
