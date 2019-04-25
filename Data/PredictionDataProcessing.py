@@ -73,7 +73,7 @@ def Full_Processing(ModelOutputCSVPath, Stock):
     predictionProcessedOnce  = Begin_Processing_Prediction_CSV(ModelOutputCSVPath)
     predictionsArray = Processing_Prediction_To_Array(predictionProcessedOnce)
     unscaledPredictionsDF = Unscale_Prediction_To_DF(predictionsArray, Stock)
-    dailyadj = Read_Daily_Adj(stock)
+    dailyadj = Read_Daily_Adj(Stock)
     combinedDF = Combine_DailyAdj_With_Prediction(dailyadj, unscaledPredictionsDF)
     Save_Predictions_DF(combinedDF, ModelOutputCSVPath)
     return
