@@ -2,10 +2,13 @@
 import tensorflow as tf
 import numpy as np
 from sklearn.preprocessing import MinMaxScaler
+import matplotlib
+matplotlib.use("TkAgg")
 import matplotlib.pyplot as plt
 from DataPreprocessing import preprocess
 from SaveMseCsv import Main_Save, Create_File_Name
 from PredictionDataProcessing import Full_Processing
+from ScatterPlot import Plot_Scatter
 
 stock = 'USB'
 
@@ -139,8 +142,14 @@ for e in range(epochs):
         plt.title('Epoch ' + str(e) + ', Batch ' + str(i))
         plt.pause(.01)
 
+#Dot Plot
+actual_close = []
 
+pred = pred_list[-1]
+for i in data_test:
+    actual_close.append(i[0])
 
+Plot_Scatter(stock, pred, actual_close)
 FileName = Create_File_Name(stock, 'Optimizer', 'Initializer', 'CostFunction')
 Main_Save(mse_train, mse_test, pred_list, FileName)
 Full_Processing(FileName, stock)
