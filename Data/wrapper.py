@@ -1,7 +1,9 @@
 import stockprediction as prediction
 import os
+import csv
+import pandas as pd
+import xlrd
 
-days = 1
 stock = ''
 save = False
 plot = True
@@ -9,6 +11,7 @@ stocks = ['AXP', 'BAC', 'BRK.B', 'CB', 'C', 'CME', 'GS', 'JPM', 'USB', 'WFC']
 buy = 5
 sell = 5
 FileName = os.getcwd()
+
 
 while True:
 	use = input("Do you want to run the network. Y/N? ")
@@ -22,13 +25,10 @@ while True:
 			print("Not in list. Try again. ")
 			stock = input("What stock above would you like to use? ")
 		prediction.main(stock)
-		FileName += '/Results/' + stock + '-Prediction_vs_Actual'
+		FileName += '/Results/' + stock + '_Optimizer_Initializer_CostFunction_FinalPredictions.csv' 
+		file = pd.read_excel(FileName)
+		
 	elif use == 'N':
 		break
 		
-		
-		
 
-
-	
-	
